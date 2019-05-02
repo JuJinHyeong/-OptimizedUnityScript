@@ -2,17 +2,43 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObjectPool{
+public class ObjectPool : MonoBehaviour
+{
+
     private List<GameObject> pool;
-    ObjectPool(GameObject obj, int count){
+    private int idx;
+    private int poolCount;
+    public ObjectPool(GameObject obj, int count)
+    {
         pool = new List<GameObject>();
-        for(int i=0; i<count; i++){
+        poolCount = count;
+        idx = 0;
+        for (int i = 0; i < count; i++)
+        {
             GameObject tmp = Instantiate(obj);
             tmp.SetActive(false);
             pool.Add(tmp);
         }
     }
-    private GameObject GetItem(int idx){
+
+    public GameObject GetItem()
+    {
+        for (int i = 0; i < poolCount; i++)
+        {
+            if (++idx == poolCount)
+            {
+                idx = 0;
+            }
+            if (!pool[idx].activeInHierarchy)
+            {
+                return pool[idx];
+            }
+        }
+        return null;
+    }
+
+    public GameObject GetItem(int idx)
+    {
         return pool[idx];
     }
 }
